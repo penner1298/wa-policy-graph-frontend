@@ -14,6 +14,9 @@ export default function Page() {
     const [bloomQuery, setBloomQuery] = useState('');
     const [isBloomOpen, setIsBloomOpen] = useState(false);
     const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
+    const [authName, setAuthName] = useState('');
+    const [authEmail, setAuthEmail] = useState('');
+    const [authSuccess, setAuthSuccess] = useState(false);
     
     const [conversationData, setConversationData] = useState<HistoryItem[]>([]);
     const [activeIndex, setActiveIndex] = useState(-1);
@@ -123,19 +126,80 @@ export default function Page() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ jurisdiction: "Washington State", query })
             });
-            const data = await response.json();
-            
-            setConversationData(prev => {
-                const updated = [...prev];
-                updated[newIndex] = {
-                    query,
-                    response: data.narrative || "No narrative found.",
-                    citations: data.citations || [],
-                    suggestions: data.actions || ["Show more details", "Compare jurisdictions"],
-                    loading: false
-                };
-                return updated;
-            });
+
+            if (!response.body) throw new Error("No response body");
+
+            const reader = response.body.getReader();
+            const decoder = new TextDecoder();
+            let accumulatedText = "";
+
+            while (true) {
+                const { value, done } = await reader.read();
+                if (done) break;
+                
+                const chunkText = decoder.decode(value, { stream: true });
+                const lines = chunkText.split('\n');
+                
+                for (const line of lines) {
+                    if (line.startsWith('data: ')) {
+                        const dataStr = line.slice(6).trim();
+                        if (!dataStr) continue;
+                        
+                        if (dataStr === '[DONE]') {
+                            try {
+                                const cleanJsonStr = accumulatedText.replace(/```json/g, '').replace(/```/g, '').trim();
+                                const parsed = JSON.parse(cleanJsonStr);
+                                setConversationData(prev => {
+                                    const updated = [...prev];
+                                    updated[newIndex] = {
+                                        query,
+                                        response: parsed.narrative || "No narrative found.",
+                                        citations: parsed.citations || [],
+                                        suggestions: parsed.actions?.slice(0, 4) || ["View financial audit details", "Read meeting transcripts", "Check salary data", "Review grant compliance"],
+                                        loading: false
+                                    };
+                                    return updated;
+                                });
+                            } catch (e) {
+                                setConversationData(prev => {
+                                    const updated = [...prev];
+                                    updated[newIndex] = {
+                                        ...updated[newIndex],
+                                        loading: false
+                                    };
+                                    return updated;
+                                });
+                            }
+                        } else {
+                            try {
+                                const parsedData = JSON.parse(dataStr);
+                                accumulatedText += parsedData.chunk;
+                                
+                                // Best-effort partial parse to show streaming text
+                                let partialNarrative = accumulatedText;
+                                const match = accumulatedText.match(/"narrative"\s*:\s*"([\s\S]*?)("(?=\s*,)|"$)/);
+                                if (match) {
+                                    partialNarrative = match[1].replace(/\\n/g, '\n').replace(/\\"/g, '"');
+                                } else {
+                                    partialNarrative = accumulatedText.replace(/```json/g, '').replace(/```/g, '');
+                                }
+
+                                setConversationData(prev => {
+                                    const updated = [...prev];
+                                    updated[newIndex] = {
+                                        ...updated[newIndex],
+                                        response: partialNarrative,
+                                        loading: true
+                                    };
+                                    return updated;
+                                });
+                            } catch (e) {
+                                // Ignore partial JSON parse errors
+                            }
+                        }
+                    }
+                }
+            }
         } catch (err) {
             setConversationData(prev => {
                 const updated = [...prev];
@@ -167,6 +231,29 @@ export default function Page() {
         setIsBloomOpen(false);
     };
 
+    const handleAuthSubmit = async (e: React.FormEvent) => {
+        e.preventDefault();
+        const jurisdiction = activeItem ? "Washington State" : "General";
+        const query = activeItem ? activeItem.query : "";
+        
+        try {
+            await fetch('/api/v1/auth/assign', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name: authName, email: authEmail, jurisdiction, query })
+            });
+            setAuthSuccess(true);
+            setTimeout(() => {
+                setIsAuthModalOpen(false);
+                setAuthSuccess(false);
+                setAuthName('');
+                setAuthEmail('');
+            }, 2000);
+        } catch (err) {
+            console.error(err);
+        }
+    };
+
     const activeItem = conversationData[activeIndex];
 
     return (
@@ -196,15 +283,23 @@ export default function Page() {
                             <p className="font-bold text-slate-900 font-sans italic pt-2">~ Penner</p>
                         </div>
 
-                        <form onSubmit={(e) => { e.preventDefault(); setIsAuthModalOpen(false); }} className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
-                            <div className="flex gap-4">
-                                <input type="text" required placeholder="Your Name" className="w-1/2 px-5 py-4 rounded-xl border border-slate-300 bg-white outline-none focus:ring-2 focus:ring-evergreen/20 focus:border-evergreen transition-all shadow-sm font-medium" />
-                                <input type="email" required placeholder="Your Email" className="w-1/2 px-5 py-4 rounded-xl border border-slate-300 bg-white outline-none focus:ring-2 focus:ring-evergreen/20 focus:border-evergreen transition-all shadow-sm font-medium" />
+                        {authSuccess ? (
+                            <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 text-center py-10">
+                                <div className="text-emerald-500 text-4xl mb-4">✓</div>
+                                <h4 className="text-xl font-bold text-emerald-800">Mission Assigned</h4>
+                                <p className="text-emerald-600 mt-2">I will keep you updated.</p>
                             </div>
-                            <button type="submit" className="w-full bg-evergreen hover:bg-emerald-900 text-white py-4 rounded-xl font-black text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
-                                Sign Up for First Access
-                            </button>
-                        </form>
+                        ) : (
+                            <form onSubmit={handleAuthSubmit} className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
+                                <div className="flex gap-4">
+                                    <input type="text" required placeholder="Your Name" value={authName} onChange={e => setAuthName(e.target.value)} className="w-1/2 px-5 py-4 rounded-xl border border-slate-300 bg-white outline-none focus:ring-2 focus:ring-evergreen/20 focus:border-evergreen transition-all shadow-sm font-medium" />
+                                    <input type="email" required placeholder="Your Email" value={authEmail} onChange={e => setAuthEmail(e.target.value)} className="w-1/2 px-5 py-4 rounded-xl border border-slate-300 bg-white outline-none focus:ring-2 focus:ring-evergreen/20 focus:border-evergreen transition-all shadow-sm font-medium" />
+                                </div>
+                                <button type="submit" className="w-full bg-evergreen hover:bg-emerald-900 text-white py-4 rounded-xl font-black text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
+                                    Sign Up for First Access
+                                </button>
+                            </form>
+                        )}
                     </div>
                 </div>
             )}
