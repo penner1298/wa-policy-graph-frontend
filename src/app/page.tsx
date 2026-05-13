@@ -367,7 +367,7 @@ export default function Page() {
                     <div className={`w-full max-w-6xl h-[85vh] bg-white rounded-3xl shadow-[0_50px_100px_rgba(0,0,0,0.5)] flex flex-col md:flex-row overflow-hidden border border-slate-100 bloom-transition ${isBloomOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
                         <button onClick={closeBloom} className="absolute top-8 right-8 z-[200] p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 bg-white shadow-sm border border-slate-100">✕</button>
 
-                        <div className="w-full md:w-1/3 bg-slate-50 border-r border-slate-200 p-10 overflow-y-auto">
+                        <div className="w-full md:w-1/3 h-[30vh] md:h-auto bg-slate-50 border-b md:border-b-0 md:border-r border-slate-200 p-6 md:p-10 overflow-y-auto shrink-0">
                             <h2 className="text-2xl font-black text-slate-900 tracking-tighter mb-8">Conversation</h2>
                             <div className="flex flex-col gap-3">
                                 {conversationData.map((item, idx) => (
