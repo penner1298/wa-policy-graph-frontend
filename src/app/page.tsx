@@ -325,7 +325,7 @@ export default function Page() {
                 </a>
             </header>
 
-            <main className="relative z-10 max-w-3xl mx-auto px-6 pt-16 pb-12 flex flex-col items-center justify-center min-h-[80vh]">
+            <main className="relative z-10 max-w-3xl mx-auto px-6 pt-16 pb-24 md:pb-12 flex flex-col items-center justify-center min-h-[85vh] md:min-h-[80vh]">
                 <div className={`text-center w-full transition-all duration-700 flex flex-col items-center mt-4 ${isBloomOpen ? 'opacity-0 scale-95 pointer-events-none' : 'opacity-100 scale-100'}`}>
                     <div className="relative w-28 h-28 mb-12 group">
                         <div className="absolute inset-0 bg-evergreen/10 rounded-[2rem] rotate-6 group-hover:rotate-12 transition-all duration-700"></div>
@@ -335,17 +335,17 @@ export default function Page() {
                         </div>
                     </div>
 
-                    <h1 className="text-5xl md:text-[4rem] font-black text-slate-900 mb-10 tracking-tighter leading-[1.1] max-w-4xl">
+                    <h1 className="text-4xl md:text-[4rem] font-black text-slate-900 mb-8 md:mb-10 tracking-tighter leading-[1.1] max-w-4xl">
                         I am your personal civic <br className="hidden md:block" /> intelligence agent.
                     </h1>
 
                     <div className="w-full max-w-3xl mx-auto transition-all duration-700 z-20 mb-12 relative group">
-                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-slate-400 font-medium text-xl px-16 py-6 md:py-8 overflow-hidden tracking-tight">
-                            <span ref={typewriterRef} className="text-center w-full whitespace-normal break-words" style={{ opacity: searchQuery ? 0 : 1 }}></span>
+                        <div className="absolute inset-0 flex items-center justify-center pointer-events-none text-slate-400 font-medium text-base md:text-xl px-8 md:px-16 py-6 md:py-8 overflow-hidden tracking-tight">
+                            <span ref={typewriterRef} className="text-center w-full whitespace-normal break-words leading-snug" style={{ opacity: searchQuery ? 0 : 1 }}></span>
                         </div>
                         <textarea 
                             rows={1}
-                            className="w-full resize-none text-center py-6 md:py-7 px-8 rounded-[2.5rem] border-2 border-slate-200/80 hover:border-evergreen/40 bg-white/95 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-evergreen/10 focus:border-evergreen focus:ring-4 focus:ring-evergreen/10 outline-none transition-all duration-500 text-xl font-medium overflow-hidden text-slate-800 tracking-tight" 
+                            className="w-full resize-none text-center py-6 md:py-7 px-6 md:px-8 rounded-[2.5rem] border-2 border-slate-200/80 hover:border-evergreen/40 bg-white/95 shadow-xl shadow-slate-200/50 hover:shadow-2xl hover:shadow-evergreen/10 focus:border-evergreen focus:ring-4 focus:ring-evergreen/10 outline-none transition-all duration-500 text-lg md:text-xl font-medium overflow-hidden text-slate-800 tracking-tight" 
                             placeholder=""
                             value={searchQuery}
                             onChange={(e) => {
@@ -455,7 +455,7 @@ export default function Page() {
             </main>
 
             {/* MEMBRANE API CALLOUT */}
-            <a href="https://membrane-api.com" target="_blank" rel="noopener noreferrer" className="fixed bottom-6 left-6 z-40 flex items-center gap-2 px-3 py-2 rounded-xl bg-white/60 backdrop-blur-md border border-slate-200/60 text-xs font-medium text-slate-500 hover:text-evergreen hover:border-evergreen/30 hover:bg-white hover:shadow-md transition-all group">
+            <a href="https://membrane-api.com" target="_blank" rel="noopener noreferrer" className="fixed bottom-6 left-1/2 -translate-x-1/2 md:left-6 md:translate-x-0 z-40 flex items-center gap-2 px-3 py-2 rounded-xl bg-white/60 backdrop-blur-md border border-slate-200/60 text-xs font-medium text-slate-500 hover:text-evergreen hover:border-evergreen/30 hover:bg-white hover:shadow-md transition-all group whitespace-nowrap">
                 <svg className="w-4 h-4 text-emerald-500 group-hover:text-evergreen transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
                 <span>Powered by <strong className="text-slate-700 group-hover:text-evergreen transition-colors">Membrane API</strong> Zero-Hallucination Protocol</span>
             </a>
