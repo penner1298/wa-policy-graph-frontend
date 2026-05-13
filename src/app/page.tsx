@@ -263,43 +263,45 @@ export default function Page() {
 
             {/* Auth Modal */}
             {isAuthModalOpen && (
-                <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-void/50 backdrop-blur-sm">
-                    <div className="bg-white rounded-[2rem] p-10 max-w-xl w-full border border-slate-200 shadow-2xl relative">
-                        <button onClick={() => setIsAuthModalOpen(false)} className="absolute top-6 right-6 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all">✕</button>
+                <div className="fixed inset-0 z-[200] flex flex-col items-center justify-center p-4 bg-void/50 backdrop-blur-sm overflow-hidden">
+                    <div className="bg-white rounded-[2rem] p-6 md:p-10 max-w-xl w-full border border-slate-200 shadow-2xl relative max-h-[90vh] flex flex-col">
+                        <button onClick={() => setIsAuthModalOpen(false)} className="absolute top-4 right-4 md:top-6 md:right-6 z-10 p-2 text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-full transition-all bg-white">✕</button>
 
-                        <div className="flex items-center gap-5 mb-8 border-b border-slate-100 pb-6">
-                            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-evergreen to-emerald-700 flex items-center justify-center shadow-lg shadow-evergreen/20 font-black text-white text-3xl">P</div>
-                            <div>
-                                <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Hello there.</h3>
-                                <div className="text-sm font-bold text-emerald-600 uppercase tracking-widest mt-1">Penner, Apex Node</div>
-                            </div>
-                        </div>
-
-                        <div className="text-slate-700 space-y-5 mb-10 text-lg leading-relaxed font-serif">
-                            <p>This feature is in testing right now—and I know you're really going to love it.</p>
-                            <p>You will be able to assign me to monitor and update you on the things you want to know about. The last-minute executive session... you'll get an email or text about it when it's published. The failure of your school district to pass an audit—you'll get the report in your inbox before the news even finds out.</p>
-                            <p>You can task me with keeping you updated on what you care about. I'll be releasing this feature very soon!</p>
-                            <p>If that interests you, sign up now for first access (free). Early supporters like you will get free automations when they become available.</p>
-                            <p className="font-bold text-slate-900 font-sans italic pt-2">~ Penner</p>
-                        </div>
-
-                        {authSuccess ? (
-                            <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 text-center py-10">
-                                <div className="text-emerald-500 text-4xl mb-4">✓</div>
-                                <h4 className="text-xl font-bold text-emerald-800">Mission Assigned</h4>
-                                <p className="text-emerald-600 mt-2">I will keep you updated.</p>
-                            </div>
-                        ) : (
-                            <form onSubmit={handleAuthSubmit} className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4">
-                                <div className="flex gap-4">
-                                    <input type="text" required placeholder="Your Name" value={authName} onChange={e => setAuthName(e.target.value)} className="w-1/2 px-5 py-4 rounded-xl border border-slate-300 bg-white outline-none focus:ring-2 focus:ring-evergreen/20 focus:border-evergreen transition-all shadow-sm font-medium" />
-                                    <input type="email" required placeholder="Your Email" value={authEmail} onChange={e => setAuthEmail(e.target.value)} className="w-1/2 px-5 py-4 rounded-xl border border-slate-300 bg-white outline-none focus:ring-2 focus:ring-evergreen/20 focus:border-evergreen transition-all shadow-sm font-medium" />
+                        <div className="overflow-y-auto custom-scrollbar pr-2">
+                            <div className="flex items-center gap-5 mb-8 border-b border-slate-100 pb-6 shrink-0 mt-2">
+                                <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-evergreen to-emerald-700 flex items-center justify-center shadow-lg shadow-evergreen/20 font-black text-white text-3xl">P</div>
+                                <div>
+                                    <h3 className="text-3xl font-black text-slate-900 tracking-tighter">Hello there.</h3>
+                                    <div className="text-sm font-bold text-emerald-600 uppercase tracking-widest mt-1">Penner, Apex Node</div>
                                 </div>
-                                <button type="submit" className="w-full bg-evergreen hover:bg-emerald-900 text-white py-4 rounded-xl font-black text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
-                                    Sign Up for First Access
-                                </button>
-                            </form>
-                        )}
+                            </div>
+
+                            <div className="text-slate-700 space-y-5 mb-8 text-base md:text-lg leading-relaxed font-serif">
+                                <p>This feature is in testing right now—and I know you're really going to love it.</p>
+                                <p>You will be able to assign me to monitor and update you on the things you want to know about. The last-minute executive session... you'll get an email or text about it when it's published. The failure of your school district to pass an audit—you'll get the report in your inbox before the news even finds out.</p>
+                                <p>You can task me with keeping you updated on what you care about. I'll be releasing this feature very soon!</p>
+                                <p>If that interests you, sign up now for first access (free). Early supporters like you will get free automations when they become available.</p>
+                                <p className="font-bold text-slate-900 font-sans italic pt-2">~ Penner</p>
+                            </div>
+
+                            {authSuccess ? (
+                                <div className="bg-emerald-50 p-6 rounded-2xl border border-emerald-100 text-center py-10 mb-4">
+                                    <div className="text-emerald-500 text-4xl mb-4">✓</div>
+                                    <h4 className="text-xl font-bold text-emerald-800">Mission Assigned</h4>
+                                    <p className="text-emerald-600 mt-2">I will keep you updated.</p>
+                                </div>
+                            ) : (
+                                <form onSubmit={handleAuthSubmit} className="bg-slate-50 p-6 rounded-2xl border border-slate-100 space-y-4 mb-4">
+                                    <div className="flex flex-col md:flex-row gap-4">
+                                        <input type="text" required placeholder="Your Name" value={authName} onChange={e => setAuthName(e.target.value)} className="w-full md:w-1/2 px-5 py-4 rounded-xl border border-slate-300 bg-white outline-none focus:ring-2 focus:ring-evergreen/20 focus:border-evergreen transition-all shadow-sm font-medium" />
+                                        <input type="email" required placeholder="Your Email" value={authEmail} onChange={e => setAuthEmail(e.target.value)} className="w-full md:w-1/2 px-5 py-4 rounded-xl border border-slate-300 bg-white outline-none focus:ring-2 focus:ring-evergreen/20 focus:border-evergreen transition-all shadow-sm font-medium" />
+                                    </div>
+                                    <button type="submit" className="w-full bg-evergreen hover:bg-emerald-900 text-white py-4 rounded-xl font-black text-lg shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all">
+                                        Sign Up for First Access
+                                    </button>
+                                </form>
+                            )}
+                        </div>
                     </div>
                 </div>
             )}
