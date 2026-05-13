@@ -32,3 +32,39 @@ To spin up this exact environment to verify the layout:
 1. `npm install`
 2. `npm run dev -- -p 3001`
 3. Make sure the Python backend is running on port `8002`.
+
+---
+
+### **WA Policy Graph Deployment & Git Workflow**
+
+We are running a split architecture. The **Backend** (API/Oracle) is on Render, and the **Frontend** (UI) is on Vercel. Both are set up for **Auto-Deploy**, meaning any push to the `main` branch will instantly update the live site.
+
+#### **1. The Backend (API & Oracle)**
+* **Repo:** `https://github.com/penner1298/wa-policy-graph-backend`
+* **Purpose:** Handles the "Ask Penner" logic, SQLite database queries, and the Gemini-3-Flash streaming integration.
+* **Where to drop fixes:** If you're modifying the AI prompt, fixing a database query, or adding new API endpoints, edit `fastapi_app.py`.
+* **How to Push:**
+ ```bash
+ git commit -am "fix: update oracle prompt"
+ git push origin main
+ ```
+
+*(Render will automatically start a new build upon receiving the push.)*
+
+#### **2. The Frontend (Next.js UI)**
+* **Repo:** `https://github.com/penner1298/wa-policy-graph-frontend`
+* **Purpose:** The topographical canvas, search interface, and the SSE (Server-Sent Events) stream reader.
+* **Where to drop fixes:**
+ * UI/Layout/CSS: `src/app/page.tsx` or `globals.css`.
+ * API Connection: Managed via `next.config.mjs` (uses the `BACKEND_URL` env var).
+* **How to Push:**
+ ```bash
+ git commit -am "feat: adjust topo canvas opacity"
+ git push origin main
+ ```
+ *(Vercel will detect the push and update the production URL in ~60 seconds.)*
+
+#### **Important Note for Devs:**
+* **Local Testing:** If you need to run the full stack locally, start the backend on port `8002` and the frontend on port `3001`. The frontend is configured to proxy all `/api/v1` calls to `localhost:8002` unless the `BACKEND_URL` env var is set.
+
+* **Environment Variables:** Do **not** commit the `GEMINI_API_KEY`. It is stored securely in the Render dashboard.
