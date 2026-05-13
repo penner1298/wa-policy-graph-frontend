@@ -68,3 +68,10 @@ We are running a split architecture. The **Backend** (API/Oracle) is on Render, 
 * **Local Testing:** If you need to run the full stack locally, start the backend on port `8002` and the frontend on port `3001`. The frontend is configured to proxy all `/api/v1` calls to `localhost:8002` unless the `BACKEND_URL` env var is set.
 
 * **Environment Variables:** Do **not** commit the `GEMINI_API_KEY`. It is stored securely in the Render dashboard.
+
+### **Local Workspace Paths (Apex Node)**
+If you are running diagnostics or need to interface directly with the raw data on the local node:
+* **Frontend (Next.js):** `/Users/thejoshpenner/.openclaw/workspace/policy-graph-gui/`
+* **Backend (FastAPI):** `/Users/thejoshpenner/.openclaw/workspace/sao-scraper/`
+
+*Note: The **Backend** folder (`sao-scraper`) holds the primary SQLite intelligence databases (`sao_2024.db` and `municipal_intent.db`) as well as the 1.8GB cache of raw scraped source reports. These databases and raw reports are explicitly excluded from Git to keep the deployment lean.*
