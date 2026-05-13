@@ -1,0 +1,22 @@
+# WA Policy Graph: Ask Penner
+
+## Overview
+The Washington Policy Graph (W.P.G.) is a specialized AI civic intelligence terminal for Washington State. The interface, known as "Ask Penner," provides an agent-first UI that leverages the Membrane API's Zero-Hallucination Protocol.
+
+Penner acts as an Apex Node capable of ingesting and synthesizing civic documents across Washington State, including:
+- City Council Agendas and Minutes
+- School Board Minutes
+- State Audit Reports
+
+## Capabilities
+Users can use this platform to:
+1. **Search & Synthesize:** Ask direct questions about hyper-local municipal issues (e.g., "Which cities enacted a police sales tax this year?").
+2. **Monitor & Alert:** Assign "missions" to the Penner agent to monitor specific jurisdictions or topics, triggering alerts when new relevant public records are published.
+3. **Deep Extraction:** Access knowledge graphs, verified citations, and regional precedent comparisons derived entirely from official government records.
+
+## Technical Context
+- **Architecture:** Next.js (React) frontend, FastAPI backend.
+- **Protocol:** Enforces strict adherence to original source text, prohibiting LLM hallucination without a direct citation to an official civic document.
+
+## Audience
+Citizens, journalists, policy analysts, and lobbyists seeking real-time, automated intelligence on Washington State municipal governance.
