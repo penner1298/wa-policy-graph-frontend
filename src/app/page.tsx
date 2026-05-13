@@ -365,11 +365,11 @@ export default function Page() {
                 </div>
 
                 {/* BLOOM MODAL */}
-                <div className={`fixed inset-0 z-[100] flex items-center justify-center p-4 bg-void/30 backdrop-blur-md bloom-transition ${isBloomOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
-                    <div className={`w-full max-w-6xl h-[85vh] bg-white rounded-3xl shadow-[0_50px_100px_rgba(0,0,0,0.5)] flex flex-col md:flex-row overflow-hidden border border-slate-100 bloom-transition ${isBloomOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
+                <div className={`fixed inset-0 z-[100] flex items-start md:items-center justify-center p-2 md:p-4 bg-void/30 backdrop-blur-md bloom-transition ${isBloomOpen ? 'opacity-100 visible' : 'opacity-0 invisible pointer-events-none'}`}>
+                    <div className={`relative w-full max-w-6xl h-[95dvh] md:h-[85vh] mt-4 md:mt-0 bg-white rounded-3xl shadow-[0_50px_100px_rgba(0,0,0,0.5)] flex flex-col md:flex-row overflow-hidden border border-slate-100 bloom-transition ${isBloomOpen ? 'scale-100 opacity-100' : 'scale-95 opacity-0'}`}>
                         <button onClick={closeBloom} className="absolute top-4 right-4 md:top-8 md:right-8 z-[200] p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-400 bg-white shadow-sm border border-slate-100">✕</button>
 
-                        <div className="w-full md:w-1/3 h-[30vh] md:h-auto bg-slate-50 border-b md:border-b-0 md:border-r border-slate-200 p-6 md:p-10 overflow-y-auto shrink-0">
+                        <div className="w-full md:w-1/3 h-[25vh] md:h-auto bg-slate-50 border-b md:border-b-0 md:border-r border-slate-200 p-6 md:p-10 overflow-y-auto shrink-0">
                             <h2 className="text-2xl font-black text-slate-900 tracking-tighter mb-8">Conversation</h2>
                             <div className="flex flex-col gap-3">
                                 {conversationData.map((item, idx) => (
@@ -384,7 +384,7 @@ export default function Page() {
                             </div>
                         </div>
 
-                        <div className="w-full md:w-2/3 flex flex-col bg-white relative overflow-y-auto">
+                        <div className="w-full md:w-2/3 flex-1 flex flex-col bg-white relative overflow-y-auto min-h-0">
                             <div className="sticky top-0 bg-white z-10 px-6 pt-8 pb-4 md:px-12 md:pt-12 shrink-0">
                                 <div className="text-xs font-black text-evergreen uppercase tracking-[0.2em]">Membrane Extraction</div>
                             </div>
